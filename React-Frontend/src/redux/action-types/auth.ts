@@ -1,0 +1,8 @@
+export enum AuthActionTypes {
+  LOG_IN = "LOG_IN",
+  LOG_IN_SUCCESS = "LOG_IN_SUCCESS",
+  REGISTER = "REGISTER",
+  REGISTER_SUCCESS = "REGISTER_SUCCESS",
+  LOG_OUT = "LOG_OUT",
+  ERROR = "ERROR",
+}

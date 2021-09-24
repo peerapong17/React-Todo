@@ -1,0 +1,34 @@
+POST http://localhost:4000/user/login
+
+content-type: application/json
+
+{
+    "username": "sample"
+}
+
+###
+POST http://localhost:4000/user/
+content-type: application/json
+
+{
+    "username": "moo@gmail.com"
+}
+
+
+###
+POST http://localhost:4000/user/login
+content-type: application/json
+
+{
+    "username": "sample",
+    "password": "dsadasdas"
+}
+
+###
+POST http://localhost:4000/user/register
+content-type: application/json
+
+{
+    "username": "mdwqoo@gmail.com",
+    "password": "123123"
+}
