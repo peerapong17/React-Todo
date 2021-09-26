@@ -12,9 +12,10 @@ import CheckIcon from "@material-ui/icons/Check";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useStyles } from "./styles";
 import { useTodoAction } from "../../redux/useActions/useTodoAction";
+import moment from 'moment'
 
-const TodoList: React.FC<{ task: string; id: string; isCompleted: boolean }> =
-  ({ task, id, isCompleted }) => {
+const TodoList: React.FC<{ task: string; id: string; isCompleted: boolean, createdAt:string }> =
+  ({ task, id, isCompleted, createdAt }) => {
     const classes = useStyles();
     const { deleteTodo, updateTodo } = useTodoAction();
     const [todo, setTodo] = React.useState<{
@@ -69,9 +70,10 @@ const TodoList: React.FC<{ task: string; id: string; isCompleted: boolean }> =
               autoFocus
             />
           ) : (
-            <Typography className={classes.task} variant="h5">
-              {task}
-            </Typography>
+            <div className={classes.task}>
+              <Typography variant="h5">{task}</Typography>
+              <Typography variant="caption">{moment(createdAt).fromNow()}</Typography>
+            </div>
           )}
           {isEditting && (
             <div className={classes.btnContainer}>

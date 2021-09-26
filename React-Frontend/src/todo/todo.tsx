@@ -20,77 +20,58 @@ import { useStyles } from "./styles";
 import TodoForm from "./todoForm/todoForm";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import * as http from "../http-request/todo";
 import TodoList from "./todoList/todoList";
-import { UserData } from "../redux/models/todo";
-import axios from "axios";
 import { useTodoAction } from "../redux/useActions/useTodoAction";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducers";
 import { useAuthAction } from "../redux/useActions/useAuthAction";
 import { useHistory } from "react-router";
+import { Todo } from "../redux/models/todo";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Todo: React.FC = () => {
+const TodoMain: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const { logoutUser } = useAuthAction();
   const { fetchData } = useTodoAction();
+  const [selectedDate, setSelectedDate] = React.useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
   const { isLoading, userData, error } = useSelector(
     (state: RootState) => state.todos
   );
   const [open, setOpen] = React.useState<boolean>(false);
-  // const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
 
   React.useEffect(() => {
     fetchData();
-    // const fetch = async () => {
-    //   console.log("object");
-    //   const response = await axios.get<UserData>("http://localhost:4000/todo", {
-    //     headers: {
-    //       Authorization:
-    //         "Bearer " + JSON.parse(localStorage.getItem("userData")!),
-    //     },
-    //   });
-
-    //   if (response.status >= 200 && response.status < 300) {
-    //     setLoading(false);
-    //     setUserData({...response.data});
-    //   } else {
-    //     throw new Error("Error: Could not fetch the data");
-    //   }
-    // };
-
-    // fetch();
   }, []);
 
   const handleDateChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    // console.log(typeof new Date().toISOString());
-    // console.log(new Date().toISOString());
-    // console.log(e.target.value);
-    // todoList.map((todo) => {
-    //   console.log(todo.createdAt);
-    //   console.log(new Date(todo.createdAt.seconds).toDateString());
-    //   console.log(
-    //     new Date(todo.createdAt.seconds).toLocaleString("en-GB", {
-    //       timeZone: "UTC",
-    //     })
-    //   );
-    // });
+    console.log(typeof new Date().toISOString());
+    console.log(new Date().toISOString().split("T")[0]);
+    console.log(e.target.value);
+    console.log(e.target.value === new Date().toISOString().split("T")[0]);
+    userData.todos.map((todo) => {
+      console.log(todo.createdAt.split("T")[0]);
+      console.log(new Date(todo.createdAt).toDateString());
+    });
+    setSelectedDate(e.target.value);
+  };
+
+  const dataListener = (): Todo[] => {
+    return [...userData.todos].filter((todo) => {
+      return todo.createdAt.split("T")[0] == selectedDate;
+    });
   };
 
   if (error) {
     return <h3>Error in the API call itself ...</h3>;
   }
-
-  const handleClose = () => {
-    console.log("object");
-  };
 
   return (
     <React.Fragment>
@@ -123,8 +104,8 @@ const Todo: React.FC = () => {
                 color="secondary"
                 className={classes.circular}
               />
-            ) : userData.todos && userData.todos.length != 0 ? (
-              userData.todos.map((data, i) => {
+            ) : userData.todos && userData.todos.length > 0 ? (
+              dataListener().map((data, i) => {
                 return <TodoList key={i} {...data} />;
               })
             ) : (
@@ -147,17 +128,6 @@ const Todo: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
-      {error && (
-        <Snackbar
-          open={error !== ""}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error">
-            {error}
-          </Alert>
-        </Snackbar>
-      )}
       <Dialog open={open}>
         <DialogTitle>{"Are you sure?"}</DialogTitle>
         <DialogContent>
@@ -186,4 +156,4 @@ const Todo: React.FC = () => {
   );
 };
 
-export default Todo;
+export default TodoMain;
