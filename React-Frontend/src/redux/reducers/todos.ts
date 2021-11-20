@@ -10,7 +10,7 @@ const initialState: StateTodos = {
 
 export const todos = (state = initialState, action: TodoAction): StateTodos => {
   switch (action.type) {
-    case TodoActionTypes.FETCH_DATA:
+    case TodoActionTypes.LOADING:
       return {
         userData: {} as UserData,
         isLoading: true,
@@ -45,7 +45,13 @@ export const todos = (state = initialState, action: TodoAction): StateTodos => {
         userData: {
           ...state.userData,
           todos: state.userData.todos.map((todo) =>
-            todo.id === action.id ? { ...action.payload } : todo
+            todo.id === action.id
+              ? {
+                  ...todo,
+                  task: action.payload.task,
+                  isCompleted: action.payload.isCompleted,
+                }
+              : todo
           ),
         },
       };
@@ -59,6 +65,13 @@ export const todos = (state = initialState, action: TodoAction): StateTodos => {
             (todo) => todo.id !== action.payload
           ),
         },
+      };
+
+    case TodoActionTypes.CLEAR:
+      return {
+        ...state,
+        isLoading: false,
+        error: "",
       };
 
     default:

@@ -1,22 +1,19 @@
 import { PassActionTypes } from "../action-types/pass";
 
-interface EnterEmail {
-  type: PassActionTypes.ENTER_EMAIL;
+interface Loading {
+  type: PassActionTypes.LOADING;
 }
-interface EnterEmailSuccess {
+interface Success {
   type: PassActionTypes.SUCCESS;
   payload: string;
 }
-interface ResetPassword {
-  type: PassActionTypes.RESET_PASSWORD;
-}
-interface ResetPasswordError {
+interface Error {
   type: PassActionTypes.ERROR;
   payload: string;
 }
 
-export type PassAction =
-  | EnterEmail
-  | EnterEmailSuccess
-  | ResetPassword
-  | ResetPasswordError;
+interface Clear {
+  type: PassActionTypes.CLEAR;
+}
+
+export type PassAction = Loading | Success | Error | Clear;

@@ -21,19 +21,26 @@ const enterEmail = async (req, res) => {
 
     const link = `http://localhost:3000/reset-password/enter-new-password/${user._id}/${token.token}`;
 
-    await sendEmail(
-      req.body.email,
-      "Reset Password",
-      "click the link below to reset your password",
-      link
-    );
+    try {
+      await sendEmail(
+        req.body.email,
+        "Reset Password",
+        "click the link below to reset your password",
+        link
+      );
+    } catch (error) {
+      console.log(error)
+      return res.status(400).json({
+        message: "Something went wrong, Could not send reset-password-link to your email",
+      });
+    }
 
     res.status(200).json({
       message: "Password reset link is sent to your email account",
     });
   } catch (error) {
     res.status(400).json({
-      message: "An error occured",
+      message: error,
     });
   }
 };

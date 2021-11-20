@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Container,
@@ -30,6 +30,15 @@ const Register: React.FC = () => {
   const { createUser } = useAuthAction();
   const classes = useStyles();
   const history = useHistory();
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: AuthActionTypes.AuthActionTypes.CLEAR,
+      });
+    };
+  }, []);
+
   const formik = useFormik({
     initialValues: registerState,
     validationSchema: registerValidationSchema,
@@ -39,18 +48,9 @@ const Register: React.FC = () => {
   });
 
   const handleClose = () => {
-    if (error) {
-      dispatch({
-        type: AuthActionTypes.AuthActionTypes.ERROR,
-        payload: "",
-      });
-    }
-    if (success) {
-      dispatch({
-        type: AuthActionTypes.AuthActionTypes.LOG_IN_SUCCESS,
-        payload: "",
-      });
-    }
+    dispatch({
+      type: AuthActionTypes.AuthActionTypes.CLEAR,
+    });
   };
 
   return (

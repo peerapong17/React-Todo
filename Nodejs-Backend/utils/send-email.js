@@ -25,6 +25,9 @@ const sendEmail = async (email, subject, text, link) => {
     console.log("email sent sucessfully");
   } catch (error) {
     console.log(error, "email not sent");
+    throw new Error(
+      "Something went wrong, Could not send reset-password-link to your email"
+    );
   }
 };
 

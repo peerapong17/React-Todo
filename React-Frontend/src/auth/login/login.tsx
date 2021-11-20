@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Container,
@@ -30,9 +30,18 @@ const Login: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { loginUser } = useAuthAction();
-  const { error, isLoading: loading, authenticated } = useSelector(
+  const { error, isLoading: loading } = useSelector(
     (state: RootState) => state.auth
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: AuthActionTypes.AuthActionTypes.CLEAR,
+      });
+    };
+  }, []);
+
   const formik = useFormik({
     initialValues: loginState,
     validationSchema: loginValidationSchema,
@@ -41,14 +50,7 @@ const Login: React.FC = () => {
     },
   });
 
-  const handleClose = () => {
-    dispatch({
-      type: AuthActionTypes.AuthActionTypes.ERROR,
-      payload: "",
-    });
-  };
-
-  const googleLogin = async () => {   
+  const googleLogin = async () => {
     window.open("http://localhost:4000/auth/google", "_self");
   };
 
@@ -85,7 +87,10 @@ const Login: React.FC = () => {
                   Don't have an account?
                 </Typography>
               </Link>
-              <Link style={{ textDecoration: "none" }} to="/reset-password/enter-email">
+              <Link
+                style={{ textDecoration: "none" }}
+                to="/reset-password/enter-email"
+              >
                 <Typography className={classes.regisOrResetLink}>
                   Forget Password?
                 </Typography>
@@ -122,9 +127,20 @@ const Login: React.FC = () => {
           <Snackbar
             open={error !== ""}
             autoHideDuration={6000}
-            onClose={handleClose}
+            onClose={() =>
+              dispatch({
+                type: AuthActionTypes.AuthActionTypes.CLEAR,
+              })
+            }
           >
-            <Alert onClose={handleClose} severity="error">
+            <Alert
+              onClose={() =>
+                dispatch({
+                  type: AuthActionTypes.AuthActionTypes.CLEAR,
+                })
+              }
+              severity="error"
+            >
               {error}
             </Alert>
           </Snackbar>

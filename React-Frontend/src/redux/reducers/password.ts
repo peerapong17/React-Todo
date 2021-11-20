@@ -10,7 +10,7 @@ const initialState: StatePass = {
 
 export const pass = (state = initialState, action: PassAction): StatePass => {
   switch (action.type) {
-    case PassActionTypes.ENTER_EMAIL:
+    case PassActionTypes.LOADING:
       return {
         isLoading: true,
         success: "",
@@ -30,9 +30,9 @@ export const pass = (state = initialState, action: PassAction): StatePass => {
         error: action.payload,
       };
 
-    case PassActionTypes.RESET_PASSWORD:
+    case PassActionTypes.CLEAR:
       return {
-        isLoading: true,
+        isLoading: false,
         success: "",
         error: "",
       };

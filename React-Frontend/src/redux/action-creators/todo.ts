@@ -7,7 +7,7 @@ export const fetchData =
   () =>
   async (dispatch: Dispatch<TodoAction>): Promise<void> => {
     dispatch({
-      type: TodoActionTypes.FETCH_DATA,
+      type: TodoActionTypes.LOADING,
     });
     try {
       const { data, status } = await http.fetchData();
@@ -19,15 +19,10 @@ export const fetchData =
       } else {
         throw new Error("Could not fetch the data");
       }
-      dispatch({
-        type: TodoActionTypes.FETCH_DATA_SUCCESS,
-        payload: data,
-      });
     } catch (error) {
-      console.log(error);
       dispatch({
         type: TodoActionTypes.ERROR,
-        payload: error.response.message,
+        payload: "Could not fetch the data",
       });
     }
   };
@@ -52,17 +47,16 @@ export const updateTodo =
   (id: string, value: { task: string; isCompleted: boolean }) =>
   async (dispatch: Dispatch<TodoAction>) => {
     try {
-      const { data } = await http.updateTodo(id, value);
-      console.log(value)
       dispatch({
         type: TodoActionTypes.UPDATE_TODO,
         id: id,
-        payload: data.data,
+        payload: value,
       });
+      await http.updateTodo(id, value);
     } catch (error) {
       dispatch({
         type: TodoActionTypes.ERROR,
-        payload: error.response.message,
+        payload: "An error occured",
       });
     }
   };
@@ -70,11 +64,11 @@ export const updateTodo =
 export const deleteTodo =
   (id: string) => async (dispatch: Dispatch<TodoAction>) => {
     try {
-      await http.deleteTodo(id);
       dispatch({
         type: TodoActionTypes.DELETE_TODO,
         payload: id,
       });
+      await http.deleteTodo(id);
     } catch (error) {
       dispatch({
         type: TodoActionTypes.ERROR,

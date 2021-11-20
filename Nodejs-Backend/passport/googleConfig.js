@@ -1,5 +1,6 @@
 const User = require("../models/user");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+// var ObjectId = require('mongodb').ObjectID;
 
 const googleConfig = (passport) => {
   passport.use(
@@ -10,21 +11,18 @@ const googleConfig = (passport) => {
         callbackURL: process.env.CALL_BACK_URL,
         userProfileURL: process.env.USER_PROFILE_URL,
       },
-      function (accessToken, refreshToken, profile, cb) {
-        console.log(profile);
-        User.findOrCreate({ id: profile.id }, function (err, user) {
-          return done(err, user);
-        });
-        // User.findOneAndUpdate(
-        //   {
-        //     email: profile.id,
-        //     username: profile.displayName ?? "No display name",
-        //   },
-        //   {
-        //     returnOriginal: false,
-        //     upsert: true,
-        //   }
-        // );
+      async function (accessToken, refreshToken, profile, cb) {
+        // var myId = JSON.parse(profile.id);
+        User.findOrCreate(
+          {
+            googleId: profile.id,
+            username: profile.displayName,
+            email: profile.emails[0].value,
+          },
+          function (err, user) {
+            return cb(err, user);
+          }
+        );
       }
     )
   );

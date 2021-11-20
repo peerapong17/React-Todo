@@ -9,7 +9,7 @@ export const loginUser = (
 ) => {
   return async (dispatch: Dispatch<AuthAction>) => {
     dispatch({
-      type: AuthActionTypes.LOG_IN,
+      type: AuthActionTypes.LOADING,
     });
     try {
       const { data } = await http.loginUser(value);
@@ -47,7 +47,7 @@ export const createUser = (
 ) => {
   return async (dispatch: Dispatch<AuthAction>) => {
     dispatch({
-      type: AuthActionTypes.REGISTER,
+      type: AuthActionTypes.LOADING,
     });
     try {
       const { data } = await http.createUser(value);

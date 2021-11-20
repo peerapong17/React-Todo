@@ -19,22 +19,21 @@ import {
 import { useStyles } from "./styles";
 import TodoForm from "./todoForm/todoForm";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import TodoList from "./todoList/todoList";
 import { useTodoAction } from "../redux/useActions/useTodoAction";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/reducers";
 import { useAuthAction } from "../redux/useActions/useAuthAction";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { Todo } from "../redux/models/todo";
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Alert from "@material-ui/lab/Alert";
+import { TodoActionTypes } from "../redux/action-types/todo";
 
 const TodoMain: React.FC = () => {
+  const { accessToken } = useParams<{ accessToken: string }>();
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
   const { logoutUser } = useAuthAction();
   const { fetchData } = useTodoAction();
   const [selectedDate, setSelectedDate] = React.useState<string>(
@@ -46,8 +45,17 @@ const TodoMain: React.FC = () => {
   const [open, setOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem("userData", JSON.stringify(accessToken));
+    }
     fetchData();
   }, []);
+
+  const handleClose = () => {
+    dispatch({
+      type: TodoActionTypes.CLEAR,
+    });
+  };
 
   const handleDateChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -64,14 +72,13 @@ const TodoMain: React.FC = () => {
   };
 
   const dataListener = (): Todo[] => {
-    return [...userData.todos].filter((todo) => {
-      return todo.createdAt.split("T")[0] == selectedDate;
-    });
+    return (
+      userData.todos &&
+      [...userData.todos].filter((todo) => {
+        return todo.createdAt.split("T")[0] == selectedDate;
+      })
+    );
   };
-
-  if (error) {
-    return <h3>Error in the API call itself ...</h3>;
-  }
 
   return (
     <React.Fragment>
@@ -104,7 +111,7 @@ const TodoMain: React.FC = () => {
                 color="secondary"
                 className={classes.circular}
               />
-            ) : userData.todos && userData.todos.length > 0 ? (
+            ) : dataListener() && dataListener().length > 0 ? (
               dataListener().map((data, i) => {
                 return <TodoList key={i} {...data} />;
               })
@@ -126,6 +133,17 @@ const TodoMain: React.FC = () => {
               }}
             />
           </Grid>
+          {error && (
+            <Snackbar
+              open={!!error}
+              autoHideDuration={6000}
+              onClose={handleClose}
+            >
+              <Alert onClose={handleClose} severity="error">
+                {error}
+              </Alert>
+            </Snackbar>
+          )}
         </Grid>
       </Container>
       <Dialog open={open}>
@@ -136,9 +154,6 @@ const TodoMain: React.FC = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            Cancel
-          </Button>
           <Button
             onClick={() => {
               setOpen(false);
@@ -149,6 +164,9 @@ const TodoMain: React.FC = () => {
             autoFocus
           >
             Ok
+          </Button>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

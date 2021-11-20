@@ -4,12 +4,11 @@ import {
   Button,
   Container,
   Grid,
-  makeStyles,
   Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { useFormik } from "formik";
@@ -25,7 +24,6 @@ function Alert(props: AlertProps) {
 
 const EnterEmail: React.FC = () => {
   const classes = useStyles();
-  const history = useHistory();
   const { error, success, isLoading } = useSelector(
     (state: RootState) => state.pass
   );
@@ -40,23 +38,14 @@ const EnterEmail: React.FC = () => {
         .required("Email is Required"),
     }),
     onSubmit: ({ email }) => {
-      enterEmail({ email }, history);
+      enterEmail({ email });
     },
   });
 
   const handleClose = () => {
-    if (error) {
-      dispatch({
-        type: PassActionTypes.PassActionTypes.ERROR,
-        payload: "",
-      });
-    }
-    if (success) {
-      dispatch({
-        type: PassActionTypes.PassActionTypes.ERROR,
-        payload: "",
-      });
-    }
+    dispatch({
+      type: PassActionTypes.PassActionTypes.CLEAR,
+    });
   };
 
   return (

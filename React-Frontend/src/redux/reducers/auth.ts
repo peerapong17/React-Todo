@@ -11,7 +11,7 @@ const initialState: AuthState = {
 
 export const auth = (state = initialState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case AuthActionTypes.LOG_IN:
+    case AuthActionTypes.LOADING:
       return {
         error: "",
         success: "",
@@ -24,14 +24,6 @@ export const auth = (state = initialState, action: AuthAction): AuthState => {
         success: "",
         isLoading: false,
         authenticated: true,
-      };
-
-    case AuthActionTypes.REGISTER:
-      return {
-        success: "",
-        isLoading: true,
-        error: "",
-        authenticated: false,
       };
 
     case AuthActionTypes.REGISTER_SUCCESS:
@@ -56,6 +48,14 @@ export const auth = (state = initialState, action: AuthAction): AuthState => {
         isLoading: false,
         error: action.payload,
         authenticated: false,
+      };
+
+    case AuthActionTypes.CLEAR:
+      return {
+        ...state,
+        success: "",
+        isLoading: false,
+        error: "",
       };
 
     default:

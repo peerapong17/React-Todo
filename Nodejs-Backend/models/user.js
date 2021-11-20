@@ -12,13 +12,12 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      required: false,
     },
-    todos: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Todo",
-      },
-    ],
+    googleId: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );

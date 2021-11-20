@@ -1,13 +1,10 @@
 import { AuthActionTypes } from "../action-types/auth";
 
-interface Login {
-  type: AuthActionTypes.LOG_IN;
+interface Loading {
+  type: AuthActionTypes.LOADING;
 }
 interface LoginSuccess {
   type: AuthActionTypes.LOG_IN_SUCCESS;
-}
-interface Register {
-  type: AuthActionTypes.REGISTER;
 }
 interface RegisterSuccess {
   type: AuthActionTypes.REGISTER_SUCCESS;
@@ -20,11 +17,14 @@ interface Error {
 interface Logout {
   type: AuthActionTypes.LOG_OUT;
 }
+interface Clear {
+  type: AuthActionTypes.CLEAR;
+}
 
 export type AuthAction =
-  | Login
+  | Loading
   | LoginSuccess
-  | Register
   | RegisterSuccess
   | Logout
-  | Error;
+  | Error
+  | Clear;

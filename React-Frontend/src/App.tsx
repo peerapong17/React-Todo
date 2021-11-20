@@ -26,11 +26,13 @@ function App(): JSX.Element {
         <Route exact path="/register" component={Register} />
         <Route exact path="/reset-password/enter-email" component={EnterEmail} />
         <Route exact path="/reset-password/enter-new-password/:userId/:token" component={EnterNewPassword} />
-        <PrivateRoute
+        {/* <PrivateRoute
           path="/todo"
           component={TodoMain}
           authenticated={authenticated}
-        />
+        /> */}
+        <Route exact path="/todo" component={TodoMain} />
+        <Route exact path="/todo/:accessToken" component={TodoMain} />
       </Switch>
     </Router>
   );

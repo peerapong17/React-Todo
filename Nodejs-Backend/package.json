@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/nodemailer": "^6.4.4",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
@@ -23,11 +24,11 @@
     "mongoose-findorcreate": "^3.0.0",
     "nodemailer": "^6.6.3",
     "passport": "^0.4.0",
+    "passport-google-oauth": "^2.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^6.1.0",
-    "@types/nodemailer": "^6.4.4"
+    "passport-local-mongoose": "^6.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

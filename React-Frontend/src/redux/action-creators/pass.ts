@@ -3,30 +3,27 @@ import { Dispatch } from "redux";
 import { PassAction } from "../actions/pass";
 import { PassActionTypes } from "../action-types/pass";
 
-export const enterEmail = (value: { email: string }, history: any) => {
+export const enterEmail = (value: { email: string }) => {
   return async (dispatch: Dispatch<PassAction>): Promise<void> => {
     dispatch({
-      type: PassActionTypes.ENTER_EMAIL,
+      type: PassActionTypes.LOADING,
     });
     try {
       const { data } = await http.enterEmail(value);
-      console.log(data);
       dispatch({
         type: PassActionTypes.SUCCESS,
         payload: data.message,
       });
       setTimeout(() => {
         dispatch({
-          type: PassActionTypes.SUCCESS,
-          payload: "",
+          type: PassActionTypes.CLEAR,
         });
       }, 7000);
     } catch (error) {
-      const { message } = error.response.data;
-      if (message) {
+      if (error.response.data && error.response.data.message) {
         dispatch({
           type: PassActionTypes.ERROR,
-          payload: message,
+          payload: error.response.data.message,
         });
       } else {
         dispatch({
@@ -34,6 +31,10 @@ export const enterEmail = (value: { email: string }, history: any) => {
           payload: "Something went wrong",
         });
       }
+      // dispatch({
+      //   type: PassActionTypes.ERROR,
+      //   payload: "Something went wrong, Could not send reset-password-link to your email",
+      // });
     }
   };
 };
@@ -46,7 +47,7 @@ export const enterNewPassword = (
 ) => {
   return async (dispatch: Dispatch<PassAction>): Promise<void> => {
     dispatch({
-      type: PassActionTypes.RESET_PASSWORD,
+      type: PassActionTypes.LOADING,
     });
     try {
       const { data } = await http.enterNewPassword(value, userId, token);
@@ -57,8 +58,7 @@ export const enterNewPassword = (
       setTimeout(() => {
         history.push("/login");
         dispatch({
-          type: PassActionTypes.SUCCESS,
-          payload: "",
+          type: PassActionTypes.CLEAR,
         });
       }, 3000);
     } catch (error) {
