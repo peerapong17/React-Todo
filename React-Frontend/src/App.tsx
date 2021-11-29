@@ -1,40 +1,33 @@
 import React from "react";
 import "./App.css";
-import TodoMain from "./todo/todo";
-import Login from "./auth/login/login";
-import Register from "./auth/register/register";
-import PrivateRoute from "./route/privatedRoute";
-import EnterEmail from "./auth/enter-email/EnterEmail";
-import EnterNewPassword from "./auth/enter-new-password/EnterNewPassword";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/reducers";
+import TodoMain from "./pages/todo/todo";
+import EnterEmail from "./pages/enter-email/EnterEmail";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { PrivateRoute } from "./route/PrivateRoute";
+import Login from "./pages/login/login";
+import Register from "./pages/register/register";
+import EnterNewPassword from "./pages/enter-new-password/EnterNewPassword";
 
 function App(): JSX.Element {
-  const { authenticated } = useSelector((state: RootState) => state.auth);
-
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" render={() => <Redirect to="/login" />} />
-        <Route path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/reset-password/enter-email" component={EnterEmail} />
-        <Route exact path="/reset-password/enter-new-password/:userId/:token" component={EnterNewPassword} />
-        {/* <PrivateRoute
-          path="/todo"
-          component={TodoMain}
-          authenticated={authenticated}
-        /> */}
-        <Route exact path="/todo" component={TodoMain} />
-        <Route exact path="/todo/:accessToken" component={TodoMain} />
-      </Switch>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password/enter-email" element={<EnterEmail />} />
+        <Route
+          path="/reset-password/enter-new-password/:userId/:token"
+          element={<EnterNewPassword />}
+        />
+        <Route path="/todo" element={<PrivateRoute />}>
+          <Route path="/todo" element={<TodoMain />} />
+        </Route>
+        <Route path="/todo/:accessToken" element={<PrivateRoute />}>
+          <Route path="/todo/:accessToken" element={<Navigate to="/todo" />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

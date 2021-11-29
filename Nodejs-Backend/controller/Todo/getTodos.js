@@ -5,13 +5,14 @@ const getTodos = async (req, res, next) => {
     if (!req.user) {
       return res.status(400).json({ authenticated: false });
     }
-    console.log(req.user)
-    const data = await Todo.find({ user: req.user.id })
-    if (!data) {
+
+    const todoList = await Todo.find({ user: req.user.id });
+    if (!todoList) {
       res.status(400).json({ message: "Data with user'id is not found" });
       return;
     }
-    res.status(200).json({ username: req.user.username, todos: data });
+
+    res.status(200).json({ todoList });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -1,9 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-
-const http = axios.create({
-  baseURL: "http://localhost:4000/reset-password",
-  method: "POST",
-});
+import { http } from './http';
+import { AxiosResponse } from "axios";
 
 export const enterEmail = (value: {
   email: string;
